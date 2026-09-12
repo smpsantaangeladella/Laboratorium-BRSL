@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eksplorasi Lengkap Bangun Ruang Sisi Lengkung - Kelas IX</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #0d9488;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --success: #16a34a;
+      --error: #dc2626;
+      --highlight: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    header h1 {
+      color: var(--primary);
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Tab Navigation */
+    .nav-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .tab-btn {
+      padding: 12px 28px;
+      border: 2px solid var(--primary);
+      background: white;
+      color: var(--primary);
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1rem;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Simulation Layout */
+    .simulation-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+    }
+
+    @media (max-width: 960px) {
+      .simulation-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .canvas-card {
+      background: #0f172a;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    }
+
+    canvas {
+      display: block;
+      cursor: grab;
+    }
+
+    canvas:active {
+      cursor: grabbing;
+    }
+
+    .video-controls {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(6px);
+      padding: 10px 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .control-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .control-btn.secondary {
+      background: #475569;
+    }
+
+    /* Side Control Panel */
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .panel-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 6px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-option {
+      flex: 1;
+      padding: 10px;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 700;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+
+    .btn-option.active {
+      background: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+    }
+
+    .element-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .element-btn {
+      padding: 8px 10px;
+      text-align: left;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #334155;
+      transition: all 0.15s;
+    }
+
+    .element-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .element-btn.active {
+      background: #fef3c7;
+      border-color: var(--highlight);
+      color: #78350f;
+    }
+
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 0.9rem;
+      color: #1e40af;
+      min-height: 110px;
+    }
+
+    /* Quiz Styling */
+    .quiz-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .quiz-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .quiz-question {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      color: #1e293b;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quiz-option {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-size: 0.93rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .quiz-option:hover {
+      background: #f1f5f9;
+    }
+
+    .feedback-box {
+      margin-top: 24px;
+      padding: 24px;
+      border-radius: 12px;
+      background: white;
+      border: 2px solid var(--border);
+      display: none;
+    }
+
+    .badge-pass { color: var(--success); }
+    .badge-fail { color: var(--error); }
+
+    .analysis-list {
+      margin-top: 12px;
+      padding-left: 20px;
+      font-size: 0.92rem;
+    }
+
+    .recommendation {
+      margin-top: 16px;
+      padding: 14px;
+      background: #fffbebfb;
+      border-left: 4px solid var(--highlight);
+      font-size: 0.95rem;
+      border-radius: 0 8px 8px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Media Pembelajaran Bangun Ruang Sisi Lengkung (BRSL)</h1>
+    <p>Matematika SMP Kelas IX — Visualisasi Animasi Interaktif 3D & Kuis Evaluasi</p>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('simulasi')">🎥 Visualisasi Unsur BRSL</button>
+    <button class="tab-btn" onclick="switchTab('kuis')">📝 Kuis & Evaluasi (20 Soal)</button>
+  </div>
+
+  <!-- TAB 1: VISUALISASI INTERAKTIF -->
+  <div id="tab-simulasi" class="tab-content active">
+    <div class="simulation-grid">
+      
+      <!-- 3D Canvas / Moving Video Viewport -->
+      <div class="canvas-card">
+        <canvas id="geometryCanvas" width="650" height="460"></canvas>
+        <div class="video-controls">
+          <button class="control-btn" id="playBtn" onclick="togglePlay()">⏸ Pause Animasi</button>
+          <button class="control-btn secondary" onclick="resetRotation()">🔄 Reset Posisi 3D</button>
+          <span style="font-size: 0.8rem; color: #cbd5e1;">💡 Drag mouse di Layar Hitam untuk memutar tampilan secara manual</span>
+        </div>
+      </div>
+
+      <!-- Control Panel -->
+      <div class="panel">
+        <div>
+          <div class="panel-title">1. Pilih Bangun Ruang</div>
+          <div class="btn-group" style="margin-top: 8px;">
+            <button class="btn-option active" onclick="selectShape('tabung')">Tabung</button>
+            <button class="btn-option" onclick="selectShape('kerucut')">Kerucut</button>
+            <button class="btn-option" onclick="selectShape('bola')">Bola</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="panel-title">2. Tunjukkan Unsur Geometri</div>
+          <div class="element-grid" id="elementContainer" style="margin-top: 8px;">
+            <!-- Buttons dynamically populated by JS -->
+          </div>
+        </div>
+
+        <div>
+          <div class="panel-title">Deskripsi Unsur:</div>
+          <div class="info-box" id="infoDescription">
+            Klik salah satu unsur di atas untuk melihat penjelasannya.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB 2: KUIS DAN EVALUASI -->
+  <div id="tab-kuis" class="tab-content">
+    <div class="quiz-container">
+      <h2 style="margin-bottom: 16px; text-align: center;">Kuis & Evaluasi Bangun Ruang Sisi Lengkung (20 Soal)</h2>
+      <form id="quizForm">
+        <div id="quizQuestionsContainer"></div>
+        <button type="button" class="control-btn" style="width: 100%; padding: 14px; font-size: 1.1rem; margin-top: 10px;" onclick="submitQuiz()">Kirim Jawaban & Dapatkan Analisis Evaluasi</button>
+      </form>
+
+      <!-- Feedback Result -->
+      <div id="feedbackBox" class="feedback-box">
+        <h3 id="feedbackHeader" style="margin-bottom: 8px;"></h3>
+        <div id="feedbackScore" style="font-size: 1.2rem; font-weight: bold; margin-bottom: 12px;"></div>
+        <div id="feedbackDetail"></div>
+        <div id="teacherRecommendation" class="recommendation"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // STATE MANAGEMENT
+  let currentShape = 'tabung';
+  let currentElement = 'sisi_alas';
+  let isPlaying = true;
+  let angleY = 0;
+
+  // DATA UNSUR DENGAN KETERANGAN DETAIL KELAS IX
+  const elementData = {
+    tabung: [
+      { id: 'sisi_alas', label: 'Sisi Alas', desc: 'Sisi Alas berbentuk lingkaran datar di bagian bawah tabung.' },
+      { id: 'sisi_tutup', label: 'Sisi Tutup', desc: 'Sisi Tutup berbentuk lingkaran datar yang sejajar dan kongruen dengan alas.' },
+      { id: 'selimut', label: 'Selimut Tabung', desc: 'Bidang lengkung yang menghubungkan alas dan tutup. Jika dibuka berbentuk persegi panjang.' },
+      { id: 'rusuk', label: 'Rusuk Lengkung', desc: 'Tabung memiliki 2 Rusuk Lengkung (keliling alas & keliling tutup). Tidak ada rusuk lurus.' },
+      { id: 'jari_jari', label: 'Jari-jari (r)', desc: 'Jarak dari titik pusat lingkaran alas/tutup ke tepi lingkaran.' },
+      { id: 'diameter', label: 'Diameter (d)', desc: 'Garis lurus yang menghubungkan dua titik pada lingkaran melalui titik pusat (d = 2r).' },
+      { id: 'tinggi', label: 'Tinggi Tabung (t)', desc: 'Jarak tegak lurus antara bidang alas dan bidang tutup.' },
+      { id: 'sudut', label: 'Titik Sudut', desc: '0 Titik Sudut. Tabung tidak memiliki titik sudut.' },
+      { id: 'diagonal_bidang', label: 'Diagonal Bidang', desc: 'Tidak Ada. Sisi lengkung selimut tidak memiliki titik sudut untuk dihubungkan.' },
+      { id: 'diagonal_ruang', label: 'Diagonal Ruang', desc: 'Tidak Ada. Tabung tidak memiliki diagonal ruang.' },
+      { id: 'bidang_diagonal', label: 'Bidang Diagonal', desc: 'Tidak Ada. Namun memiliki Irisan Aksial tegak berbentuk persegi/persegi panjang.' }
+    ],
+    kerucut: [
+      { id: 'sisi_alas', label: 'Sisi Alas', desc: 'Sisi Alas berbentuk lingkaran datar di bagian bawah kerucut.' },
+      { id: 'selimut', label: 'Selimut Kerucut', desc: 'Bidang lengkung yang menyelimuti kerucut. Jika dibuka membentuk juring lingkaran.' },
+      { id: 'puncak', label: 'Titik Puncak', desc: 'Titik puncak di bagian atas kerucut tempat berpisahnya garis-garis pelukis.' },
+      { id: 'rusuk', label: 'Rusuk Lengkung', desc: 'Kerucut hanya memiliki 1 Rusuk Lengkung di sekeliling alasnya.' },
+      { id: 'jari_jari', label: 'Jari-jari (r)', desc: 'Jarak dari titik pusat alas lingkaran ke tepi alas.' },
+      { id: 'diameter', label: 'Diameter (d)', desc: 'Garis tengah bidang alas lingkaran (d = 2r).' },
+      { id: 'tinggi', label: 'Tinggi Kerucut (t)', desc: 'Jarak tegak lurus dari titik puncak ke pusat lingkaran alas.' },
+      { id: 'pelukis', label: 'Garis Pelukis (s)', desc: 'Garis miring yang menghubungkan titik puncak dengan keliling alas (s² = r² + t²).' },
+      { id: 'sudut', label: 'Titik Sudut', desc: ' Kerucut tidak memiliki titik sudut geometri datar, hanya 1 titik puncak.' },
+      { id: 'diagonal_bidang', label: 'Diagonal Bidang', desc: 'Tidak Ada pada kerucut.' },
+      { id: 'diagonal_ruang', label: 'Diagonal Ruang', desc: 'Tidak Ada pada kerucut.' },
+      { id: 'bidang_diagonal', label: 'Bidang Diagonal', desc: 'Tidak Ada. Namun irisan tegak melalui puncak berupa segitiga sama kaki.' }
+    ],
+    bola: [
+      { id: 'selimut', label: 'Sisi Bola', desc: 'Bola hanya memiliki 1 Sisi lengkung yang menutup seluruh permukaan bola.' },
+      { id: 'jari_jari', label: 'Jari-jari (r)', desc: 'Jarak dari titik pusat bola ke seluruh permukaan bola.' },
+      { id: 'diameter', label: 'Diameter (d)', desc: 'Garis lurus yang melewati titik pusat menghubungkan 2 titik permukaan (d = 2r).' },
+      { id: 'rusuk', label: 'Rusuk', desc: '0 Rusuk. Bola tidak memiliki rusuk.' },
+      { id: 'sudut', label: 'Titik Sudut / Puncak', desc: '0 Titik Sudut dan tidak memiliki titik puncak.' },
+      { id: 'diagonal_bidang', label: 'Diagonal Bidang', desc: 'Tidak Ada pada bola.' },
+      { id: 'diagonal_ruang', label: 'Diagonal Ruang', desc: 'Tidak Ada pada bola.' },
+      { id: 'bidang_diagonal', label: 'Bidang Diagonal', desc: 'Tidak Ada pada bola.' }
+    ]
+  };
+
+  // DATA 20 SOAL KUIS EVALUASI
+  const quizData = [
+    { q: "1. Berapakah jumlah sisi pada bangun ruang tabung?", o: ["1 Sisi", "2 Sisi", "3 Sisi", "4 Sisi"], a: 2, c: "Sisi Tabung" },
+    { q: "2. Sisi alas dan sisi tutup tabung berbentuk...", o: ["Persegi Panjang", "Lingkaran", "Elips", "Segitiga"], a: 1, c: "Sisi Alas & Tutup" },
+    { q: "3. Bentuk selimut kerucut jika dibuka (dijadikan jaring-jaring) adalah...", o: ["Segitiga Sama Kaki", "Persegi Panjang", "Juring Lingkaran", "Tembereng"], a: 2, c: "Selimut Kerucut" },
+    { q: "4. Berapa jumlah rusuk pada bangun ruang bola?", o: ["0 Rusuk", "1 Rusuk Lengkung", "2 Rusuk Lengkung", "Tak Terhingga"], a: 0, c: "Rusuk Bola" },
+    { q: "5. Garis miring yang menghubungkan titik puncak kerucut dengan titik pada keliling lingkaran alas disebut...", o: ["Tinggi Kerucut", "Jari-jari", "Garis Pelukis (s)", "Diameter"], a: 2, c: "Garis Pelukis" },
+    { q: "6. Hubungan antara jari-jari (r), tinggi kerucut (t), dan garis pelukis (s) dinyatakan dengan rumus...", o: ["s = r + t", "s² = r² + t²", "t² = s² + r²", "r² = s² + t²"], a: 1, c: "Garis Pelukis" },
+    { q: "7. Berapakah jumlah titik sudut pada bangun ruang tabung?", o: ["0 Titik Sudut", "1 Titik Sudut", "2 Titik Sudut", "4 Titik Sudut"], a: 0, c: "Titik Sudut Tabung" },
+    { q: "8. Mengapa bangun ruang sisi lengkung TIDAK memiliki diagonal ruang maupun diagonal bidang?", o: ["Karena ukurannya terlalu kecil", "Karena bidang sisinya melengkung & tidak ada titik-titik sudut untuk dihubungkan", "Karena rumusnya belum ditemukan", "Karena memiliki garis pelukis"], a: 1, c: "Diagonal Ruang/Bidang" },
+    { q: "9. Berapakah jumlah rusuk lengkung yang dimiliki oleh kerucut?", o: ["0 Rusuk", "1 Rusuk Lengkung", "2 Rusuk Lengkung", "3 Rusuk Lengkung"], a: 1, c: "Rusuk Kerucut" },
+    { q: "10. Jarak tegak lurus antara bidang alas dan bidang tutup pada tabung disebut...", o: ["Jari-jari", "Diameter", "Tinggi Tabung", "Garis Pelukis"], a: 2, c: "Tinggi Tabung" },
+    { q: "11. Selimut tabung jika dibuka dan direntangkan akan berbentuk...", o: ["Persegi Panjang", "Lingkaran", "Juring Lingkaran", "Trapesium"], a: 0, c: "Selimut Tabung" },
+    { q: "12. Bangun ruang sisi lengkung yang hanya memiliki 1 sisi dan tidak memiliki rusuk adalah...", o: ["Tabung", "Kerucut", "Bola", "Prisma"], a: 2, c: "Sisi Bola" },
+    { q: "13. Pada kerucut, bagian paling atas yang menjadi titik temu garis-garis pelukis dinamakan...", o: ["Titik Sudut Lancip", "Titik Pusat", "Titik Puncak", "Titik Fokus"], a: 2, c: "Titik Puncak Kerucut" },
+    { q: "14. Hubungan panjang diameter (d) dengan jari-jari (r) pada tabung/kerucut/bola adalah...", o: ["d = 0.5 r", "d = r²", "d = 2r", "d = πr"], a: 2, c: "Jari-jari & Diameter" },
+    { q: "15. Berapakah jumlah rusuk lengkung pada tabung?", o: ["1 Rusuk Lengkung", "2 Rusuk Lengkung", "3 Rusuk Lengkung", "Tidak Ada"], a: 1, c: "Rusuk Tabung" },
+    { q: "16. Irisan tegak melintasi puncak kerucut berbentuk...", o: ["Segitiga Sama Kaki", "Persegi Panjang", "Lingkaran", "Elips"], a: 0, c: "Bidang Diagonal / Irisan Aksial" },
+    { q: "17. Irisan tegak yang melintasi diameter alas dan tutup pada tabung berbentuk...", o: ["Segitiga", "Persegi / Persegi Panjang", "Lingkaran", "Trapesium"], a: 1, c: "Bidang Diagonal / Irisan Aksial" },
+    { q: "18. Sisi lengkung pada kerucut dinamakan...", o: ["Alas Kerucut", "Tutup Kerucut", "Selimut Kerucut", "Atap Kerucut"], a: 2, c: "Selimut Kerucut" },
+    { q: "19. Jika jari-jari alas kerucut adalah 6 cm dan tingginya 8 cm, berapa panjang garis pelukisnya (s)?", o: ["10 cm", "12 cm", "14 cm", "100 cm"], a: 0, c: "Garis Pelukis" },
+    { q: "20. Titik pusat bola ke permukaan bola disebut...", o: ["Diameter", "Jari-jari", "Tinggi", "Keliling"], a: 1, c: "Jari-jari (r)" }
+  ];
+
+  // CANVAS & 3D RENDERING SETUP
+  const canvas = document.getElementById('geometryCanvas');
+  const ctx = canvas.getContext('2d');
+  let isDragging = false;
+  let previousMouseX = 0;
+
+  canvas.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    previousMouseX = e.clientX;
+  });
+  window.addEventListener('mouseup', () => { isDragging = false; });
+  canvas.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      angleY += (e.clientX - previousMouseX) * 0.01;
+      previousMouseX = e.clientX;
+    }
+  });
+
+  // MAIN RENDER LOOP (ANIMATED MOVIE-LIKE)
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2 + 10;
+
+    if (isPlaying) {
+      angleY += 0.012; // Auto rotate
+    }
+
+    ctx.save();
+    ctx.translate(cx, cy);
+
+    if (currentShape === 'tabung') drawCylinder(angleY);
+    else if (currentShape === 'kerucut') drawCone(angleY);
+    else if (currentShape === 'bola') drawSphere(angleY);
+
+    ctx.restore();
+    requestAnimationFrame(render);
+  }
+
+  // DRAWING TABUNG
+  function drawCylinder(rot) {
+    const r = 85, h = 180;
+    const topY = -h / 2, botY = h / 2, ry = r * 0.32;
+
+    // Default wireframe
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(-r, topY); ctx.lineTo(-r, botY);
+    ctx.moveTo(r, topY); ctx.lineTo(r, botY);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.ellipse(0, topY, r, ry, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, botY, r, ry, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Highlights
+    if (currentElement === 'sisi_alas') {
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath(); ctx.ellipse(0, botY, r, ry, 0, 0, Math.PI * 2); ctx.fill();
+    } else if (currentElement === 'sisi_tutup') {
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath(); ctx.ellipse(0, topY, r, ry, 0, 0, Math.PI * 2); ctx.fill();
+    } else if (currentElement === 'selimut') {
+      ctx.fillStyle = 'rgba(59, 130, 246, 0.4)';
+      ctx.beginPath(); ctx.rect(-r, topY, r * 2, h); ctx.fill();
+    } else if (currentElement === 'rusuk') {
+      ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.ellipse(0, topY, r, ry, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(0, botY, r, ry, 0, 0, Math.PI * 2); ctx.stroke();
+    } else if (currentElement === 'jari_jari') {
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(0, botY); ctx.lineTo(Math.cos(rot) * r, botY + Math.sin(rot) * ry); ctx.stroke();
+      drawDot(0, botY, '#10b981'); drawDot(Math.cos(rot) * r, botY + Math.sin(rot) * ry, '#10b981');
+    } else if (currentElement === 'diameter') {
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 4;
+      const x1 = Math.cos(rot) * r, y1 = Math.sin(rot) * ry;
+      ctx.beginPath(); ctx.moveTo(-x1, botY - y1); ctx.lineTo(x1, botY + y1); ctx.stroke();
+    } else if (currentElement === 'tinggi') {
+      ctx.strokeStyle = '#ec4899'; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(0, topY); ctx.lineTo(0, botY); ctx.stroke();
+      drawDot(0, topY, '#ec4899'); drawDot(0, botY, '#ec4899');
+    } else if (currentElement === 'bidang_diagonal') {
+      const xRot = Math.cos(rot) * r;
+      ctx.fillStyle = 'rgba(236, 72, 153, 0.45)';
+      ctx.beginPath(); ctx.moveTo(-xRot, topY); ctx.lineTo(xRot, topY); ctx.lineTo(xRot, botY); ctx.lineTo(-xRot, botY); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = '#ec4899'; ctx.stroke();
+    } else if (['sudut', 'diagonal_bidang', 'diagonal_ruang'].includes(currentElement)) {
+      showNotExistsText();
+    }
+  }
+
+  // DRAWING KERUCUT
+  function drawCone(rot) {
+    const r = 95, h = 190;
+    const topY = -h / 2, botY = h / 2, ry = r * 0.32;
+
+    ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(0, topY); ctx.lineTo(-r, botY);
+    ctx.beginPath(); ctx.moveTo(0, topY); ctx.lineTo(r, botY);
+    ctx.ellipse(0, botY, r, ry, 0, 0, Math.PI * 2); ctx.stroke();
+
+    if (currentElement === 'sisi_alas') {
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath(); ctx.ellipse(0, botY, r, ry, 0, 0, Math.PI * 2); ctx.fill();
+    } else if (currentElement === 'selimut') {
+      ctx.fillStyle = 'rgba(20, 184, 166, 0.45)';
+      ctx.beginPath(); ctx.moveTo(0, topY); ctx.lineTo(-r, botY);
+      ctx.ellipse(0, botY, r, ry, 0, Math.PI, 0, true); ctx.closePath(); ctx.fill();
+    } else if (currentElement === 'puncak') {
+      drawDot(0, topY, '#ef4444', 8);
+    } else if (currentElement === 'rusuk') {
+      ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.ellipse(0, botY, r, ry, 0, 0, Math.PI * 2); ctx.stroke();
+    } else if (currentElement === 'jari_jari') {
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(0, botY); ctx.lineTo(Math.cos(rot) * r, botY + Math.sin(rot) * ry); ctx.stroke();
+      drawDot(0, botY, '#10b981');
+    } else if (currentElement === 'diameter') {
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 4;
+      const x1 = Math.cos(rot) * r, y1 = Math.sin(rot) * ry;
+      ctx.beginPath(); ctx.moveTo(-x1, botY - y1); ctx.lineTo(x1, botY + y1); ctx.stroke();
+    } else if (currentElement === 'tinggi') {
+      ctx.strokeStyle = '#ec4899'; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(0, topY); ctx.lineTo(0, botY); ctx.stroke();
+      drawDot(0, topY, '#ec4899'); drawDot(0, botY, '#ec4899');
+    } else if (currentElement === 'pelukis') {
+      ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 5;
+      const xPos = Math.cos(rot) * r, yPos = botY + Math.sin(rot) * ry;
+      ctx.beginPath(); ctx.moveTo(0, topY); ctx.lineTo(xPos, yPos); ctx.stroke();
+    } else if (currentElement === 'bidang_diagonal') {
+      const xRot = Math.cos(rot) * r;
+      ctx.fillStyle = 'rgba(236, 72, 153, 0.45)';
+      ctx.beginPath(); ctx.moveTo(0, topY); ctx.lineTo(xRot, botY); ctx.lineTo(-xRot, botY); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = '#ec4899'; ctx.stroke();
+    } else if (['sudut', 'diagonal_bidang', 'diagonal_ruang'].includes(currentElement)) {
+      showNotExistsText();
+    }
+  }
+
+  // DRAWING BOLA
+  function drawSphere(rot) {
+    const r = 110;
+
+    ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(0, 0, r, r * 0.35, rot, 0, Math.PI * 2); ctx.stroke();
+
+    if (currentElement === 'selimut') {
+      const grad = ctx.createRadialGradient(-30, -30, 10, 0, 0, r);
+      grad.addColorStop(0, '#60a5fa'); grad.addColorStop(1, '#1e40af');
+      ctx.fillStyle = grad;
+      ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
+    } else if (currentElement === 'jari_jari') {
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(rot) * r, Math.sin(rot) * r); ctx.stroke();
+      drawDot(0, 0, '#10b981');
+    } else if (currentElement === 'diameter') {
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 4;
+      const x1 = Math.cos(rot) * r, y1 = Math.sin(rot) * r;
+      ctx.beginPath(); ctx.moveTo(-x1, -y1); ctx.lineTo(x1, y1); ctx.stroke();
+      drawDot(0, 0, '#10b981');
+    } else if (['rusuk', 'sudut', 'diagonal_bidang', 'diagonal_ruang', 'bidang_diagonal'].includes(currentElement)) {
+      showNotExistsText();
+    }
+  }
+
+  function drawDot(x, y, color, size = 6) {
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
+  }
+
+  function showNotExistsText() {
+    ctx.fillStyle = '#ef4444';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🚫 Unsur Ini Tidak Dimiliki / Tidak Ada', 0, 0);
+  }
+
+  // INTERACTION CONTROL
+  function selectShape(shape) {
+    currentShape = shape;
+    document.querySelectorAll('.btn-group .btn-option').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.innerText.toLowerCase() === shape) btn.classList.add('active');
+    });
+    renderElementButtons();
+  }
+
+  function renderElementButtons() {
+    const container = document.getElementById('elementContainer');
+    container.innerHTML = '';
+    const list = elementData[currentShape];
+    currentElement = list[0].id; // reset to first element
+
+    list.forEach((item, idx) => {
+      const btn = document.createElement('button');
+      btn.className = `element-btn ${idx === 0 ? 'active' : ''}`;
+      btn.innerText = item.label;
+      btn.onclick = () => {
+        document.querySelectorAll('.element-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentElement = item.id;
+        updateDescription();
+      };
+      container.appendChild(btn);
+    });
+    updateDescription();
+  }
+
+  function updateDescription() {
+    const list = elementData[currentShape];
+    const found = list.find(item => item.id === currentElement);
+    if (found) {
+      document.getElementById('infoDescription').innerHTML = `<strong>${found.label}:</strong><br>${found.desc}`;
+    }
+  }
+
+  function togglePlay() {
+    isPlaying = !isPlaying;
+    document.getElementById('playBtn').innerText = isPlaying ? '⏸ Pause Animasi' : '▶ Play Animasi';
+  }
+
+  function resetRotation() { angleY = 0; }
+
+  function switchTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+    if (tabName === 'simulasi') {
+      document.querySelectorAll('.tab-btn')[0].classList.add('active');
+      document.getElementById('tab-simulasi').classList.add('active');
+    } else {
+      document.querySelectorAll('.tab-btn')[1].classList.add('active');
+      document.getElementById('tab-kuis').classList.add('active');
+    }
+  }
+
+  // GENERATE QUIZ QUESTIONS
+  function generateQuiz() {
+    const container = document.getElementById('quizQuestionsContainer');
+    container.innerHTML = '';
+
+    quizData.forEach((qData, qIdx) => {
+      const card = document.createElement('div');
+      card.className = 'quiz-card';
+
+      let optionsHTML = '';
+      qData.o.forEach((opt, oIdx) => {
+        optionsHTML += `
+          <label class="quiz-option">
+            <input type="radio" name="q_${qIdx}" value="${oIdx}">
+            <span>${opt}</span>
+          </label>
+        `;
+      });
+
+      card.innerHTML = `
+        <div class="quiz-question">${qData.q}</div>
+        <div class="quiz-options">${optionsHTML}</div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  // SUBMIT & EVALUATE QUIZ
+  function submitQuiz() {
+    let score = 0;
+    let missedCategories = {};
+
+    quizData.forEach((qData, qIdx) => {
+      const selected = document.querySelector(`input[name="q_${qIdx}"]:checked`);
+      if (selected && parseInt(selected.value) === qData.a) {
+        score++;
+      } else {
+        if (!missedCategories[qData.c]) {
+          missedCategories[qData.c] = 1;
+        } else {
+          missedCategories[qData.c]++;
+        }
+      }
+    });
+
+    const finalScore = (score / quizData.length) * 100;
+    const feedbackBox = document.getElementById('feedbackBox');
+    const feedbackHeader = document.getElementById('feedbackHeader');
+    const feedbackScore = document.getElementById('feedbackScore');
+    const feedbackDetail = document.getElementById('feedbackDetail');
+    const teacherRecommendation = document.getElementById('teacherRecommendation');
+
+    feedbackBox.style.display = 'block';
+    feedbackScore.innerText = `Skor Akhir: ${finalScore} / 100 (Benar ${score} dari ${quizData.length} Soal)`;
+
+    if (finalScore === 100) {
+      feedbackHeader.innerHTML = '<span class="badge-pass">🎉 Luar Biasa! Pemahaman Sempurna!</span>';
+      feedbackDetail.innerHTML = 'Selamat! Murid telah menguasai seluruh konsep unsur-unsur Bangun Ruang Sisi Lengkung secara menyeluruh.';
+      teacherRecommendation.innerHTML = '<strong>Saran Pembelajaran Lanjutan:</strong> Murid sangat siap untuk masuk ke tahap kalkulasi Luas Permukaan dan Volume BRSL serta soal-soal HOTS.';
+    } else {
+      feedbackHeader.innerHTML = '<span class="badge-fail">⚠️ Koreksi Otomatis: Ada Konsep yang Belum Lengkap</span>';
+      
+      let missedHTML = '<p style="margin-bottom:8px;"><strong>Materi/Konsep yang masih perlu ditingkatkan:</strong></p><ul class="analysis-list">';
+      for (let cat in missedCategories) {
+        missedHTML += `<li>Materi <strong>${cat}</strong> (${missedCategories[cat]} kesalahan)</li>`;
+      }
+      missedHTML += '</ul>';
+      feedbackDetail.innerHTML = missedHTML;
+
+      teacherRecommendation.innerHTML = '<strong>Ide & Rekomendasi Guru untuk Kelas IX:</strong><br>' +
+        '1. Minta murid kembali ke menu <em>Visualisasi Unsur BRSL</em> dan menyorot bagian yang masih salah.<br>' +
+        '2. Tekankan kembali konsep bahwa <strong>Garis Pelukis (s)</strong> hanya ada pada kerucut dan berkaitan dengan teorema Pythagoras.<br>' +
+        '3. Ingatkan bahwa BRSL tidak memiliki diagonal karena sisinya yang melengkung mulus.';
+    }
+
+    feedbackBox.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // INITIALIZATION
+  renderElementButtons();
+  generateQuiz();
+  render();
+</script>
+
+</body>
+</html>
